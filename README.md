@@ -17,9 +17,11 @@
 只需改配置、再启动，**不必单独安装 Python**：
 
 ```bash
-git clone https://github.com/你的用户名/对话助手.git
-cd 对话助手
+git clone https://github.com/sakesenqiu1/dialogue-assistant.git
+cd dialogue-assistant
 ```
+
+仓库地址：[github.com/sakesenqiu1/dialogue-assistant](https://github.com/sakesenqiu1/dialogue-assistant)
 
 1. 复制环境配置并填入密钥（二选一）：
    - 手动：`copy .env.example .env`，编辑 `.env` 中的 `DEEPSEEK_API_KEY`
