@@ -80,11 +80,18 @@ def main() -> None:
     print("=" * 50)
     print()
 
+    # Embedded Python (runtime/) does not put project root on sys.path via ._pth
+    os.chdir(ROOT)
+    root_str = str(ROOT)
+    if root_str not in sys.path:
+        sys.path.insert(0, root_str)
+
     import uvicorn
+    from app.main import app as fastapi_app
 
     # reload=False: avoids orphan child processes when closing the window
     uvicorn.run(
-        "app.main:app",
+        fastapi_app,
         host="127.0.0.1",
         port=port,
         reload=False,
