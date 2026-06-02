@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>暖心对话助手</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div>
+        <h1>暖心对话助手</h1>
+        <p class="subtitle">导入历史 → AI 提炼 Ta 的沟通画像 → 据此辅助你每一次发送</p>
+      </div>
+      <span id="apiStatus" class="badge">检测中…</span>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <h2>对话本</h2>
+          <div class="sidebar-actions">
+            <button type="button" id="btnNewConv" class="btn btn-primary btn-sm">新建</button>
+            <button type="button" id="btnDeleteConv" class="btn btn-danger btn-sm" disabled title="删除当前对话本">删除</button>
+          </div>
+        </div>
+        <ul id="convList" class="conv-list"></ul>
+        <p id="convHint" class="sidebar-hint">选中对话本后，先导入记录并生成画像</p>
+      </aside>
+
+      <main class="main">
+        <nav class="tabs">
+          <button type="button" class="tab active" data-tab="import">① 导入与画像</button>
+          <button type="button" class="tab" data-tab="assist">② 发送辅助</button>
+          <button type="button" class="tab" data-tab="history">③ 对话记录</button>
+        </nav>
+
+        <section id="tab-import" class="tab-panel active">
+          <div class="panel">
+            <h2>批量导入过往聊天</h2>
+            <p class="help-text">从微信/QQ 复制记录粘贴，或上传 .txt。每行：<code>我：内容</code> / <code>Ta：内容</code>；混排自述可用 <code>自述：内容</code>。<strong>不必按时间排序</strong>，AI 会综合全部材料等权分析。</p>
+            <label class="field">
+              <span>Ta 的昵称（微信导出时填备注名，可识别「A：消息」这类行）</span>
+              <input id="friendNick" type="text" placeholder="例如：A" />
+            </label>
+            <label class="field">
+              <span>粘贴聊天记录</span>
+              <textarea id="importText" rows="10" placeholder="我：在吗&#10;Ta：嗯&#10;我：今天感觉怎么样"></textarea>
+            </label>
+            <div class="actions row-wrap">
+              <label class="check-label">
+                <input type="checkbox" id="importClear" /> 导入前清空已有记录
+              </label>
+              <button type="button" id="btnImport" class="btn btn-primary" disabled>解析并导入</button>
+              <label class="btn btn-secondary file-btn">
+                上传 txt
+                <input type="file" id="importFile" accept=".txt,text/plain" hidden />
+              </label>
+            </div>
+            <p id="importStatus" class="status-line"></p>
+          </div>
+
+          <div class="panel self-narrative-panel">
+            <h2>导入 Ta 自述</h2>
+            <p class="help-text">日记、朋友圈长文、对 Ta 转述的内心话等<strong>不是来回对话</strong>的内容。与聊天记录分开保存，生成画像时权重更高。</p>
+            <label class="field">
+              <span>粘贴自述（三种方式任选）</span>
+              <textarea id="importSelfText" rows="8" placeholder="方式1 每段加前缀：&#10;自述：最近总是睡不着，觉得很累…&#10;&#10;方式2 用空行分隔多段（不加前缀也可）&#10;&#10;方式3 用 --- 分隔多段"></textarea>
+            </label>
+            <div class="actions row-wrap">
+              <label class="check-label">
+                <input type="checkbox" id="importSelfClear" /> 导入前清空已有自述
+              </label>
+              <button type="button" id="btnImportSelf" class="btn btn-primary" disabled>导入自述</button>
+            </div>
+            <p id="importSelfStatus" class="status-line"></p>
+          </div>
+
+          <div class="panel narrative-panel">
+            <h2>手动旁白（你的补充说明）</h2>
+            <p class="help-text">聊天记录看不出的习惯、禁忌、近况等，写在这里。生成画像与发送辅助时都会纳入（保存后生效）。</p>
+            <label class="field">
+              <textarea id="userNarrative" rows="5" placeholder="例如：Ta 讨厌被叫全名；失眠时别催睡觉；提到某前任会情绪崩溃；微信秒回但电话不爱接…" disabled></textarea>
+            </label>
+            <div class="actions row-wrap">
+              <button type="button" id="btnSaveNarrative" class="btn btn-secondary" disabled>保存旁白</button>
+              <button type="button" id="btnDeleteNarrative" class="btn btn-danger btn-sm" disabled>删除旁白</button>
+            </div>
+            <p id="narrativeStatus" class="status-line"></p>
+            <div id="narrativePreview" class="narrative-preview hidden"></div>
+          </div>
+
+          <div class="panel profile-panel">
+            <div class="panel-head">
+              <h2>个性化沟通画像</h2>
+              <div class="panel-head-actions">
+                <button type="button" id="btnDeleteProfile" class="btn btn-danger btn-sm" disabled>删除画像</button>
+                <button type="button" id="btnBuildProfile" class="btn btn-primary" disabled>AI 分析并生成画像</button>
+              </div>
+            </div>
+            <p class="help-text">综合全部对话与自述（不按末尾几条定论）+ 手动旁白，提炼触发点、有效话术、你的盲区。材料有变请重新生成。</p>
+            <div id="profileBox" class="profile-box empty-hint">导入足够聊天记录后，点击上方按钮生成画像（建议至少几十条）</div>
+          </div>
+        </section>
+
+        <section id="tab-assist" class="tab-panel">
+          <div class="panel compose-panel">
+            <div id="profileBanner" class="profile-banner hidden"></div>
+            <h2>发送前辅助（基于画像 + 近期对话）</h2>
+            <label class="field">
+              <span>你真正想表达的意思</span>
+              <textarea id="intentInput" rows="2" placeholder="例如：我担心 Ta，不是想批评 Ta"></textarea>
+            </label>
+            <label class="field">
+              <span>准备发送的草稿</span>
+              <textarea id="draftInput" rows="4" placeholder="输入打算发给 Ta 的原话…"></textarea>
+            </label>
+            <button type="button" id="btnAnalyze" class="btn btn-primary" disabled>个性化分析 & 优化文案</button>
+            <div id="analysisResult" class="analysis-result hidden"></div>
+          </div>
+          <div class="panel">
+            <h2>近期辅助记录</h2>
+            <div id="pastAnalyses" class="past-list empty-hint">暂无</div>
+          </div>
+        </section>
+
+        <section id="tab-history" class="tab-panel">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>已导入 / 录入的内容</h2>
+              <div class="history-actions">
+                <button type="button" id="btnClearDialogue" class="btn btn-secondary btn-sm" disabled>清空对话</button>
+                <button type="button" id="btnClearSelf" class="btn btn-secondary btn-sm" disabled>清空自述</button>
+                <button type="button" id="btnClearAllMsgs" class="btn btn-danger btn-sm" disabled>清空全部</button>
+              </div>
+            </div>
+            <p class="help-text">导入错对话本时，可删单条或按类型清空；清空后建议重新生成画像。</p>
+            <div id="narrativeHistoryBox" class="narrative-history-box hidden">
+              <h3 class="sub-title">手动旁白</h3>
+              <div id="narrativeHistoryCard" class="msg user_narrative-side"></div>
+            </div>
+            <div id="messageList" class="message-list empty-hint">暂无记录</div>
+            <form id="logForm" class="log-form hidden">
+              <div class="row">
+                <select id="logRole">
+                  <option value="me">我说</option>
+                  <option value="friend">Ta 说（对话）</option>
+                  <option value="self_narrative">Ta 自述</option>
+                </select>
+                <input id="logContent" type="text" placeholder="补录一条…" />
+                <button type="submit" class="btn btn-secondary">保存</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

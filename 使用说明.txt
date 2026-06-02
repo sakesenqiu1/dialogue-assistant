@@ -1,0 +1,19 @@
+暖心对话助手 
+
+【第一次使用（3 步）】
+  1. 双击「配置DeepSeek.bat」→ 在记事本里填 DEEPSEEK_API_KEY → 保存关闭
+  2. 双击「run.bat」
+  3. 浏览器打开黑窗口里的地址（如 http://127.0.0.1:8000）
+
+【日常】
+  启动：run.bat
+  停止：关掉黑色窗口；端口占用再运行 stop_server.bat
+
+【文件夹说明】
+  runtime\     内置 Python（已打好依赖，勿删）
+  app\ static\  程序
+  data\        本机的对话数据（空=新用户）
+  .env         你的 API 密钥（勿发给别人）
+
+【若缺少 runtime\python】
+  在能上网的电脑双击 build_portable.bat 生成一次。

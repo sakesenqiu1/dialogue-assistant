@@ -1,0 +1,28 @@
+# 密钥与本地数据（切勿提交）
+.env
+data/
+*.db
+
+# 内置 Python 体积过大，克隆后运行 build_portable.bat 生成
+runtime/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# 运行时
+*.pid
+*.port
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+.cursor/
