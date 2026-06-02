@@ -32,8 +32,6 @@ cd dialogue-assistant
 
 > 密钥获取：[DeepSeek 开放平台](https://platform.deepseek.com/)
 
-仓库已忽略 `.env`、`data/`、`runtime/`，不会把密钥和本地数据推上去。
-
 ## 快速开始（Windows）
 
 ### 方式 A：便携版（推荐给非开发者）
@@ -74,14 +72,6 @@ Ta：嗯
 ```
 
 导入顺序**不必按时间**；分析时会均匀综合全部条目。
-
-## 开源 / 上传 GitHub
-
-| 会提交到仓库 | 不会提交（本地生成） |
-|-------------|---------------------|
-| 源码、`run.bat`、`setup.bat`、`.env.example` | `.env`（你的密钥） |
-| `requirements*.txt`、`build_portable.ps1` | `data/`（SQLite 数据库） |
-| | `runtime/`（内置 Python，首次 `run.bat` 自动构建） |
 
 ## 技术栈
 
