@@ -12,13 +12,35 @@
 - 发送前激怒风险分析与文案优化
 - Windows 便携版：可复制文件夹到其它电脑使用（见下方）
 
+## 从 GitHub 克隆后（推荐流程）
+
+只需改配置、再启动，**不必单独安装 Python**：
+
+```bash
+git clone https://github.com/你的用户名/对话助手.git
+cd 对话助手
+```
+
+1. 复制环境配置并填入密钥（二选一）：
+   - 手动：`copy .env.example .env`，编辑 `.env` 中的 `DEEPSEEK_API_KEY`
+   - 或双击 `配置DeepSeek.bat` 自动创建并打开 `.env`
+2. 双击 **`run.bat`**
+   - **首次运行**会自动联网下载内置 Python（约 1～3 分钟，只需一次）
+   - 若 `.env` 里仍是占位密钥，会提示用记事本修改
+
+> 密钥获取：[DeepSeek 开放平台](https://platform.deepseek.com/)
+
+仓库已忽略 `.env`、`data/`、`runtime/`，不会把密钥和本地数据推上去。
+
 ## 快速开始（Windows）
 
 ### 方式 A：便携版（推荐给非开发者）
 
-1. 若文件夹内**没有** `runtime\python\python.exe`，先双击 `build_portable.bat`（需联网，只需一次）
-2. 双击 `配置DeepSeek.bat`，在 `.env` 中填写 [DeepSeek](https://platform.deepseek.com/) API Key
-3. 双击 `run.bat`，浏览器打开终端里显示的地址
+1. 配置 `.env`（见上方「从 GitHub 克隆后」）
+2. 双击 `run.bat`（首次会自动执行 `setup.bat` 准备环境）
+3. 浏览器打开终端里显示的地址
+
+可选：提前双击 `build_portable.bat` 只构建环境、不启动服务。
 
 ### 方式 B：开发者（Python 3.11+）
 
@@ -51,10 +73,13 @@ Ta：嗯
 
 导入顺序**不必按时间**；分析时会均匀综合全部条目。
 
-## 开源说明
+## 开源 / 上传 GitHub
 
-- 上传 GitHub 时**不要**提交 `.env`、`data/`、`runtime/`（已在 `.gitignore` 中）
-- 克隆仓库后需自行配置 API Key；便携用户运行 `build_portable.bat` 生成内置 Python
+| 会提交到仓库 | 不会提交（本地生成） |
+|-------------|---------------------|
+| 源码、`run.bat`、`setup.bat`、`.env.example` | `.env`（你的密钥） |
+| `requirements*.txt`、`build_portable.ps1` | `data/`（SQLite 数据库） |
+| | `runtime/`（内置 Python，首次 `run.bat` 自动构建） |
 
 ## 技术栈
 

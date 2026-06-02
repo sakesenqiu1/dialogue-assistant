@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul 2>&1
 cd /d "%~dp0"
-if not exist ".env" copy /Y ".env.example" ".env"
+call "%~dp0setup.bat"
 echo 请在打开的记事本中，把 DEEPSEEK_API_KEY= 后面改成你的密钥并保存。
 echo.
 notepad .env

@@ -1,19 +1,19 @@
-暖心对话助手 
+暖心对话助手
 
-【第一次使用（3 步）】
-  1. 双击「配置DeepSeek.bat」→ 在记事本里填 DEEPSEEK_API_KEY → 保存关闭
+【从 GitHub 下载后（2 步即可）】
+  1. 编辑 .env：填 DEEPSEEK_API_KEY（没有 .env 就双击「配置DeepSeek.bat」）
   2. 双击「run.bat」
-  3. 浏览器打开黑窗口里的地址（如 http://127.0.0.1:8000）
+     首次会自动联网准备内置 Python（约 1～3 分钟，只需一次）
 
 【日常】
   启动：run.bat
   停止：关掉黑色窗口；端口占用再运行 stop_server.bat
 
 【文件夹说明】
-  runtime\     内置 Python（已打好依赖，勿删）
+  runtime\     内置 Python（首次 run 自动生成，勿删）
   app\ static\  程序
-  data\        本机的对话数据（空=新用户）
-  .env         你的 API 密钥（勿发给别人）
+  data\        本机对话数据（不上传 GitHub）
+  .env         你的 API 密钥（不上传 GitHub，勿发给别人）
 
-【若缺少 runtime\python】
-  在能上网的电脑双击 build_portable.bat 生成一次。
+【可选】
+  setup.bat / build_portable.bat  仅准备环境、不启动服务
