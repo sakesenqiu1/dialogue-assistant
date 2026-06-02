@@ -11,7 +11,11 @@ if not exist ".env" (
 if not exist "data" mkdir "data"
 
 set "PYEXE=%~dp0runtime\python\python.exe"
-if exist "%PYEXE%" exit /b 0
+if exist "%PYEXE%" (
+  "%PYEXE%" -c "import fastapi,uvicorn,sqlalchemy" 2>nul
+  if not errorlevel 1 exit /b 0
+  echo [setup] Dependencies incomplete, continuing install...
+)
 
 echo.
 echo [setup] First run: downloading embedded Python (needs internet, 1-3 min)...
